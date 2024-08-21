@@ -71,6 +71,7 @@ inline TfLiteStatus CreateOpResolver(TflmOpResolver& op_resolver) {
   TF_LITE_ENSURE_STATUS(op_resolver.AddFullyConnected());
   TF_LITE_ENSURE_STATUS(op_resolver.AddGather());
   TF_LITE_ENSURE_STATUS(op_resolver.AddGatherNd());
+  TF_LITE_ENSURE_STATUS(op_resolver.AddGelu());
   TF_LITE_ENSURE_STATUS(op_resolver.AddGreater());
   TF_LITE_ENSURE_STATUS(op_resolver.AddGreaterEqual());
   TF_LITE_ENSURE_STATUS(op_resolver.AddHardSwish());
