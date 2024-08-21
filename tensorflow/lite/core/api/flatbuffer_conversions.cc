@@ -863,15 +863,19 @@ TfLiteStatus ParseOpDataTfLite(const Operator* op, BuiltinOperator op_type,
       *builtin_data = params.release();
       return kTfLiteOk;
     }
-    case BuiltinOperator_GELU: {
-      auto params = safe_allocator.Allocate<TfLiteGeluParams>();
-      TF_LITE_ENSURE(error_reporter, params != nullptr);
-      if (const auto* gelu_params = op->builtin_options_as_GeluOptions()) {
-        params->approximate = gelu_params->approximate();
-      }
-      *builtin_data = params.release();
-      return kTfLiteOk;
-    }
+    // case BuiltinOperator_GELU: {
+    //   auto params = safe_allocator.Allocate<TfLiteGeluParams>();
+    //   TF_LITE_ENSURE(error_reporter, params != nullptr);
+    //   if (const auto* gelu_params = op->builtin_options_as_GeluOptions()) {
+    //     params->approximate = gelu_params->approximate();
+    //   }
+    //   *builtin_data = params.release();
+    //   return kTfLiteOk;
+    // }
+	case BuiltinOperator_GELU: {
+		return ParseGelu(op, error_reporter, allocator, builtin_data);
+		
+	}
     case BuiltinOperator_STABLEHLO_SCATTER: {
       return ParseStablehloScatter(op, error_reporter, allocator, builtin_data);
     }
@@ -1599,6 +1603,24 @@ TfLiteStatus ParseGather(const Operator* op, ErrorReporter* error_reporter,
 // selective registration for the OpResolver implementation in micro.
 TfLiteStatus ParseGatherNd(const Operator*, ErrorReporter*,
                            BuiltinDataAllocator*, void**) {
+  return kTfLiteOk;
+}
+// We have this parse function instead of directly returning kTfLiteOk from the
+// switch-case in ParseOpData because this function is used as part of the
+// selective registration for the OpResolver implementation in micro.
+// TfLiteStatus ParseGelu(const Operator*, ErrorReporter*, BuiltinDataAllocator*,
+//                         void**) {
+//   return kTfLiteOk;
+// }
+TfLiteStatus ParseGelu(const Operator* op, ErrorReporter* error_reporter,
+                       BuiltinDataAllocator* allocator, void** builtin_data) {
+  auto* safe_allocator = reinterpret_cast<SafeBuiltinDataAllocator*>(allocator);
+  auto params = safe_allocator->Allocate<TfLiteGeluParams>();
+  TF_LITE_ENSURE(error_reporter, params != nullptr);
+  if (const auto* gelu_params = op->builtin_options_as_GeluOptions()) {
+    params->approximate = gelu_params->approximate();
+  }
+  *builtin_data = params.release();
   return kTfLiteOk;
 }
 
