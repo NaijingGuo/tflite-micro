@@ -1614,11 +1614,14 @@ TfLiteStatus ParseGatherNd(const Operator*, ErrorReporter*,
 // }
 TfLiteStatus ParseGelu(const Operator* op, ErrorReporter* error_reporter,
                        BuiltinDataAllocator* allocator, void** builtin_data) {
-  auto* safe_allocator = reinterpret_cast<SafeBuiltinDataAllocator*>(allocator);
-  auto params = safe_allocator->Allocate<TfLiteGeluParams>();
+  SafeBuiltinDataAllocator safe_allocator(allocator);
+  std::unique_ptr<TfLiteGeluParams,
+					SafeBuiltinDataAllocator::BuiltinDataDeleter>
+  params = safe_allocator.Allocate<TfLiteGeluParams>();
   TF_LITE_ENSURE(error_reporter, params != nullptr);
-  if (const auto* gelu_params = op->builtin_options_as_GeluOptions()) {
-    params->approximate = gelu_params->approximate();
+  const GeluOptions* schema_params = op->builtin_options_as_GeluOptions();
+  if (schema_params != nullptr) {
+    params->approximate = schema_params->approximate();
   }
   *builtin_data = params.release();
   return kTfLiteOk;
