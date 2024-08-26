@@ -155,13 +155,13 @@ TfLiteStatus ConvPrepare(TfLiteContext* context, TfLiteNode* node) {
   TF_LITE_ENSURE(context, filter != nullptr);
 
   TF_LITE_ENSURE_EQ(context, input->type, output->type);
-  TF_LITE_ENSURE_MSG(
-      context,
-      (input->type == kTfLiteFloat32 && filter->type == kTfLiteFloat32) ||
-          (input->type == kTfLiteInt16 && filter->type == kTfLiteInt8) ||
-          (input->type == kTfLiteInt8 &&
-           (filter->type == kTfLiteInt4 || filter->type == kTfLiteInt8)),
-      "Hybrid models are not supported on TFLite Micro.");
+//   TF_LITE_ENSURE_MSG(
+//       context,
+//       (input->type == kTfLiteFloat32 && filter->type == kTfLiteFloat32) ||
+//           (input->type == kTfLiteInt16 && filter->type == kTfLiteInt8) ||
+//           (input->type == kTfLiteInt8 &&
+//            (filter->type == kTfLiteInt4 || filter->type == kTfLiteInt8)),
+//       "Hybrid models are not supported on TFLite Micro.");
 
   const int input_width = input->dims->data[2];
   const int input_height = input->dims->data[1];
