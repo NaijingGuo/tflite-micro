@@ -100,6 +100,8 @@ TfLiteStatus MicroInterpreterGraph::PrepareSubgraphs() {
                                                  .registration;
       if (registration->prepare != nullptr) {
         TfLiteStatus prepare_status = registration->prepare(context_, node);
+        MicroPrintf("Node %s (number %d) prepare status %d",
+                              OpNameFromRegistration(registration), i, prepare_status);
         if (prepare_status != kTfLiteOk) {
           MicroPrintf("Node %s (number %df) failed to prepare with status %d",
                       OpNameFromRegistration(registration), i, prepare_status);
@@ -192,6 +194,8 @@ TfLiteStatus MicroInterpreterGraph::InvokeSubgraph(int subgraph_idx) {
 
     TFLITE_DCHECK(registration->invoke);
     TfLiteStatus invoke_status = registration->invoke(context_, node);
+    MicroPrintf("Node %s (number %d) invoke status %d",
+                          OpNameFromRegistration(registration), i, invoke_status);
 
     // All TfLiteTensor structs used in the kernel are allocated from temp
     // memory in the allocator. This creates a chain of allocations in the
