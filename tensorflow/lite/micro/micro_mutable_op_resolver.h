@@ -337,7 +337,7 @@ class MicroMutableOpResolver : public MicroOpResolver {
   }
 
   TfLiteStatus AddGelu() {
-    return AddBuiltin(BuiltinOperator_GELU, tflite::Register_PRELU(),
+    return AddBuiltin(BuiltinOperator_GELU, tflite::Register_GELU(),
                       ParseGelu);
   }
 
